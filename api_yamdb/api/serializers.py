@@ -3,7 +3,6 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainSerializer
 from rest_framework_simplejwt.tokens import AccessToken
-
 from reviews.models import Category, Comment, Genre, Review, Title, User
 
 
