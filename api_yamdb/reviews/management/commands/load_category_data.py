@@ -70,7 +70,12 @@ class Command(BaseCommand):
             n = 0
             for row in reader:
                 category = Category.objects.get(id=row[3])
-                Title(id=row[0], name=row[1], year=row[2], category=category).save()
+                Title(
+                    id=row[0],
+                    name=row[1],
+                    year=row[2],
+                    category=category
+                ).save()
                 n += 1
                 print(f"done {n}")
 
@@ -114,7 +119,11 @@ class Command(BaseCommand):
             review_id = Review.objects.get(id=row[1])
             author = User.objects.get(id=row[3])
             Comment.objects.create(
-                id=row[0], review=review_id, text=row[2], author=author, pub_date=row[4]
+                id=row[0],
+                review=review_id,
+                text=row[2],
+                author=author,
+                pub_date=row[4]
             ).save()
             n += 1
             print(f"done {n}")
