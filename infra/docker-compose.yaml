@@ -9,7 +9,7 @@ services:
       - ./.env
 
   web:
-    image: alvaresyp/yamdb_final
+    image: alvaresyp/final_16
     restart: always
     volumes:
       - static_value:/app/static/
