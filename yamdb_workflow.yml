@@ -57,9 +57,9 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            sudo docker pull alvaresyp/infra_actions:latest
+            sudo docker pull alvaresyp/yamdb_final
             sudo docker stop $(sudo docker ps -a -q)
-            sudo docker run --rm -d -p 5000:5000 alvaresyp/infra_actions:latest
+            sudo docker run --rm -d -p 5000:5000 alvaresyp/yamdb_final
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
