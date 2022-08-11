@@ -1,12 +1,5 @@
 import uuid
 
-from api.filters import TitleFilter
-from api.permissions import (IsAdminOrReadOnly, IsAdminOrSuperUser,
-                             IsUserAdminModeratorOrReadOnly)
-from api.serializers import (CategorySerializer, CommentSerializer,
-                             GenreSerializer, ProfileSerializer,
-                             ReviewSerializer, SignupSerializer,
-                             TitleSerializer, TokenSerializer, UserSerializer)
 from django.core.mail import send_mail
 from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
@@ -18,6 +11,24 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
+
+from api.filters import TitleFilter
+from api.permissions import (
+    IsAdminOrReadOnly,
+    IsAdminOrSuperUser,
+    IsUserAdminModeratorOrReadOnly,
+)
+from api.serializers import (
+    CategorySerializer,
+    CommentSerializer,
+    GenreSerializer,
+    ProfileSerializer,
+    ReviewSerializer,
+    SignupSerializer,
+    TitleSerializer,
+    TokenSerializer,
+    UserSerializer,
+)
 from reviews.models import Category, Genre, Review, Title
 from users.models import User
 
@@ -77,7 +88,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 @api_view(["GET", "PATCH"])
-@permission_classes([IsAuthenticated, ])
+@permission_classes(
+    [
+        IsAuthenticated,
+    ]
+)
 def get_profile(request):
     if request.method == "PATCH":
         serializer = ProfileSerializer(request.user, data=request.data)
@@ -89,9 +104,7 @@ def get_profile(request):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.annotate(
-        rating=Avg('reviews__score')
-    )
+    queryset = Title.objects.annotate(rating=Avg("reviews__score"))
     serializer_class = TitleSerializer
     pagination_class = LimitOffsetPagination
     permission_classes = (IsAdminOrReadOnly,)
@@ -137,13 +150,13 @@ class ReviewViewSet(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
-        title_id = self.kwargs.get('title_id')
+        title_id = self.kwargs.get("title_id")
         title = get_object_or_404(Title, pk=title_id)
         title_queryset = title.reviews.all()
         return title_queryset
 
     def perform_create(self, serializer):
-        title_id = self.kwargs.get('title_id')
+        title_id = self.kwargs.get("title_id")
         title = get_object_or_404(Title, pk=title_id)
         serializer.save(author=self.request.user, title=title)
 
@@ -154,12 +167,12 @@ class CommentViewSet(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
-        review_id = self.kwargs.get('review_id')
+        review_id = self.kwargs.get("review_id")
         review = get_object_or_404(Review, pk=review_id)
         review_queryset = review.comments.all()
         return review_queryset
 
     def perform_create(self, serializer):
-        review_id = self.kwargs.get('review_id')
+        review_id = self.kwargs.get("review_id")
         review = get_object_or_404(Review, pk=review_id)
         serializer.save(author=self.request.user, review=review)

@@ -1,6 +1,7 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import UniqueConstraint
+
 from users.models import User
 
 
@@ -43,7 +44,9 @@ class Title(models.Model):
         max_length=100,
         verbose_name="Название произведения",
     )
-    year = models.PositiveSmallIntegerField(verbose_name="Год издания", )
+    year = models.PositiveSmallIntegerField(
+        verbose_name="Год издания",
+    )
     category = models.ForeignKey(
         Category,
         blank=True,
@@ -70,26 +73,19 @@ class Title(models.Model):
 
 
 class GenreTitle(models.Model):
-    title = models.ForeignKey(
-        Title,
-        on_delete=models.CASCADE,
-        related_name='genres'
-    )
-    genre = models.ForeignKey(
-        Genre,
-        on_delete=models.CASCADE,
-        related_name='titles'
-    )
+    title = models.ForeignKey(Title, on_delete=models.CASCADE, related_name="genres")
+    genre = models.ForeignKey(Genre, on_delete=models.CASCADE, related_name="titles")
 
     def __str__(self):
         return str(self.id)
 
     class Meta:
-        ordering = ['id']
+        ordering = ["id"]
 
 
 class Review(models.Model):
     """Модель Отзывов"""
+
     text = models.TextField(
         help_text="Введите текст отзыва",
         verbose_name="Текст отзыва",
@@ -121,9 +117,7 @@ class Review(models.Model):
     class Meta:
         ordering = ("-pub_date",)
         constraints = [
-            UniqueConstraint(
-                fields=['author', 'title'],
-                name='unique_review')
+            UniqueConstraint(fields=["author", "title"], name="unique_review")
         ]
 
     def __str__(self):
@@ -149,7 +143,9 @@ class Comment(models.Model):
         auto_now_add=True,
         verbose_name="Дата комментария",
     )
-    text = models.TextField(verbose_name="Текст комментария", )
+    text = models.TextField(
+        verbose_name="Текст комментария",
+    )
 
     class Meta:
         ordering = ("-pub_date",)
